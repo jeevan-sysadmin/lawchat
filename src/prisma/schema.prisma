@@ -1,0 +1,58 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-1.1.x", "rhel-openssl-3.0.x"]
+}
+
+model Account {
+  id                 String  @id @default(cuid()) @map("_id")
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  // Adding opposite relation field to establish bidirectional relationship
+  user               User    @relation(fields: [userId], references: [id])
+}
+
+model Session {
+  id           String   @id @default(cuid()) @map("_id")
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  // Removing relation directive as MongoDB doesn't support relational associations
+}
+
+model User {
+  id            String    @id @default(cuid()) @map("_id")
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+
+  // Storing account and session IDs directly in the User document
+  accountIds    String[]
+  sessionIds    String[]
+
+  // Adding reverse relation field
+  accounts      Account[]
+}
+
+model VerificationToken {
+  id          String   @id @default(cuid()) @map("_id")
+  identifier  String
+  token       String   @unique
+  expires     DateTime
+}
