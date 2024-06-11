@@ -1,6 +1,4 @@
-
 'use client'
-
 import React, { useState, useEffect } from 'react';
 import { Button, IconButton, MenuItem, Select, ListItemIcon, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Menu, CircularProgress } from '@mui/material';
 import { CloudUpload, CreateNewFolder, Delete, GridOnOutlined, ViewListOutlined, CloudDownload, SortByAlpha, Event, Folder, Edit } from '@mui/icons-material';
@@ -8,6 +6,7 @@ import { users } from '../../../app/api/login/users';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import FolderContents from './folderContents'; // Adjust the path according to your directory structure
 
 
 
@@ -460,6 +459,8 @@ const MyFilesPage = () => {
           <Button onClick={handleNewCase}>New Case</Button>
         </DialogActions>
       </Dialog>
+      <h2>My Folders</h2>
+      <FolderContents userId={userId} />
 
 
 

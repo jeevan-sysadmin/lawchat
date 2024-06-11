@@ -1,4 +1,3 @@
-
 // pages/api/getUserFolderContents.js
 import { NextResponse } from "next/server";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
@@ -19,6 +18,8 @@ async function getUserFolderContents(userId) {
       Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME,
       Prefix: `users/${userId}/`,
     };
+
+    console.log(userId);
 
     const command = new ListObjectsV2Command(params);
     const data = await s3Client.send(command);
@@ -45,6 +46,8 @@ async function getFolderContents(userId, folderName) {
       Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME,
       Prefix: `users/${userId}/${folderName}/`, // Include folder name in Prefix
     };
+
+
 
     const command = new ListObjectsV2Command(params);
     const data = await s3Client.send(command);

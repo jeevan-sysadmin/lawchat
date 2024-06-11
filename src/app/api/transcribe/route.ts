@@ -146,6 +146,25 @@ export async function POST(req: NextRequest) {
     });
 
     console.log('Transcription complete:', transcription);
+
+    // Sending transcription to webhook
+
+
+    console.log('Sending transcription to webhook...');
+    const webhookResponse = await fetch('https://flowai.digivox.ai/webhook-test/e5f5df0d-c55e-42e2-a9a6-8b006ade9759', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        transcription: transcription,
+      }),
+    });
+
+    console.log('Webhook response status:', webhookResponse.status);
+    const webhookResponseBody = await webhookResponse.json();
+    console.log('Webhook response body:', webhookResponseBody);
+
     return NextResponse.json(transcription);
   } catch (error) {
     console.error('Error:', error);

@@ -9,7 +9,7 @@ export const users = [
     image: '/images/avatars/1.png'
   },
   {
-    id: 1,
+    id: 2,
     name: 'Jeevan Larosh',
     password: 'client',
     email: 'client@Lawchat.com',

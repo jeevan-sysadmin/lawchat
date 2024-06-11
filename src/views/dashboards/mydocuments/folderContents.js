@@ -37,7 +37,7 @@ function FolderContents() {
     }
 
     fetchFolderContents();
-  }, [currentDirectory]); // Include currentDirectory in the dependency array
+  }, [currentDirectory]); // Add currentDirectory as a dependency
 
   const handleFolderClick = (folder) => {
     setSelectedFolder(folder);

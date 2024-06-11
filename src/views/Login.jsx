@@ -1,3 +1,4 @@
+//src/views/Login.jsx
 'use client'
 
 // React Imports
@@ -20,7 +21,7 @@ import Divider from '@mui/material/Divider'
 import Alert from '@mui/material/Alert'
 
 // Third-party Imports
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { Controller, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { object, minLength, string, email } from 'valibot'
@@ -88,6 +89,7 @@ const Login = ({ mode }) => {
   // Hooks
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { data: session } = useSession() // Access session information
   const { lang: locale } = useParams()
   const { settings } = useSettings()
   const theme = useTheme()
@@ -124,14 +126,12 @@ const Login = ({ mode }) => {
     })
 
     if (res && res.ok && res.error === null) {
-      // Vars
-      const redirectURL = searchParams.get('redirectTo') ?? '/'
-
-      router.push(getLocalizedUrl(redirectURL, locale))
+      // Redirect user based on session information
+      const redirectURL = session ? (searchParams.get('redirectTo') ?? '/') : '/dashboards/crm'
+      router.push(redirectURL)
     } else {
       if (res?.error) {
         const error = JSON.parse(res.error)
-
         setErrorState(error)
       }
     }
