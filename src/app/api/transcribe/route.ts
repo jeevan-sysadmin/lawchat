@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
 
 
     console.log('Sending transcription to webhook...');
-    const webhookResponse = await fetch('https://flowai.digivox.ai/webhook-test/e5f5df0d-c55e-42e2-a9a6-8b006ade9759', {
+    const webhookResponse = await fetch('https://flowai.digivox.ai/webhook/23157133-9ba2-4493-ac92-42069d0188a6', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -165,7 +165,7 @@ export async function POST(req: NextRequest) {
     const webhookResponseBody = await webhookResponse.json();
     console.log('Webhook response body:', webhookResponseBody);
 
-    return NextResponse.json(transcription);
+    return NextResponse.json({ transcription, webhookResponseBody });
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.error();
