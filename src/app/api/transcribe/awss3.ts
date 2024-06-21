@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Your S3 integration testing logic here
     res.status(200).json({ message: 'Successfully tested S3 integration' })
-    
+
   } catch (error) {
     console.error('Error testing S3 integration:', error)
     res.status(500).json({ error: 'Failed to test S3 integration' })

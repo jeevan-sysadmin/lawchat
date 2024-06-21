@@ -1,12 +1,12 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { Button, IconButton, MenuItem, Select, ListItemIcon, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Menu, CircularProgress } from '@mui/material';
-import { CloudUpload, CreateNewFolder, Delete, GridOnOutlined, ViewListOutlined, CloudDownload, SortByAlpha, Event, Folder, Edit } from '@mui/icons-material';
+import { CloudUpload, CreateNewFolder, Delete, GridOnOutlined, ViewListOutlined, CloudDownload, SortByAlpha, Event, Folder, Edit,TrendingUp ,HourglassFull } from '@mui/icons-material';
 import { users } from '../../../app/api/login/users';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import FolderContents from './folderContents'; // Adjust the path according to your directory structure
+import FolderContents from '/src/views/dashboards/mydocuments/folderContents.js';
 
 
 
@@ -74,10 +74,22 @@ const MyFilesPage = () => {
     const selectedSortBy = event.target.value;
     setSortBy(selectedSortBy);
     let sortedFiles = [...files];
-    if (selectedSortBy === 'name') {
+    if (selectedSortBy === 'nameAsc') {
       sortedFiles.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (selectedSortBy === 'date') {
+    } else if (selectedSortBy === 'nameDesc') {
+      sortedFiles.sort((a, b) => b.name.localeCompare(a.name));
+    } else if (selectedSortBy === 'dateAsc') {
+      sortedFiles.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (selectedSortBy === 'dateDesc') {
       sortedFiles.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (selectedSortBy === 'statusAsc') {
+      sortedFiles.sort((a, b) => a.progress - b.progress);
+    } else if (selectedSortBy === 'statusDesc') {
+      sortedFiles.sort((a, b) => b.progress - a.progress);
+    } else if (selectedSortBy === 'durationAsc') {
+      sortedFiles.sort((a, b) => a.duration - b.duration);
+    } else if (selectedSortBy === 'durationDesc') {
+      sortedFiles.sort((a, b) => b.duration - a.duration);
     }
     setFiles(sortedFiles);
   };
@@ -340,30 +352,54 @@ const MyFilesPage = () => {
           <Button startIcon={<CloudDownload />} onClick={handleFTRFolderUpload}>Upload FTR Folder</Button>
         </div>
       )}
+      <h2 style={{ marginBottom: '0.5rem' }}>My Files</h2>
+      <div></div>
       <div className="right">
-        <h2 style={{ marginBottom: '0.5rem' }}>My Files</h2>
-        <Button onClick={handleGoBack} disabled={currentDirectory.length === 0} size="small">Go Back</Button>
-        <Select
-          value={sortBy}
-          onChange={handleSortChange}
-          variant="outlined"
-          size="small"
-          style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}
-        >
-          <MenuItem value="name">
-            <ListItemIcon style={{ minWidth: '32px' }}><SortByAlpha /></ListItemIcon>
-            Name
-          </MenuItem>
-          <MenuItem value="date">
-            <ListItemIcon style={{ minWidth: '32px' }}><Event /></ListItemIcon>
-            Date
-          </MenuItem>
-        </Select>
+
+      <Select
+      value={sortBy}
+      onChange={handleSortChange}
+
+
+
+    >
+      <MenuItem value="name-asc">
+        <ListItemIcon style={{ minWidth: '32px' }}><SortByAlpha /></ListItemIcon>
+        Name (A-Z)
+      </MenuItem>
+      <MenuItem value="name-desc">
+        <ListItemIcon style={{ minWidth: '32px' }}><SortByAlpha /></ListItemIcon>
+        Name (Z-A)
+      </MenuItem>
+      <MenuItem value="date-recent">
+        <ListItemIcon style={{ minWidth: '32px' }}><Event /></ListItemIcon>
+        Date uploaded (most recent)
+      </MenuItem>
+      <MenuItem value="date-oldest">
+        <ListItemIcon style={{ minWidth: '32px' }}><Event /></ListItemIcon>
+        Date uploaded (least recent)
+      </MenuItem>
+      <MenuItem value="status-asc">
+        <ListItemIcon style={{ minWidth: '32px' }}><TrendingUp /></ListItemIcon>
+        Status (least to most Progress)
+      </MenuItem>
+      <MenuItem value="status-desc">
+        <ListItemIcon style={{ minWidth: '32px' }}><TrendingUp /></ListItemIcon>
+        Status (most to least Progress)
+      </MenuItem>
+      <MenuItem value="duration-desc">
+        <ListItemIcon style={{ minWidth: '32px' }}><HourglassFull /></ListItemIcon>
+        Duration (longest to shortest)
+      </MenuItem>
+      <MenuItem value="duration-asc">
+        <ListItemIcon style={{ minWidth: '32px' }}><HourglassFull /></ListItemIcon>
+        Duration (shortest to longest)
+      </MenuItem>
+    </Select>
         <IconButton onClick={handleCreateFolder} size="small"><CreateNewFolder /></IconButton>
         <IconButton onClick={() => selectedFile && handleDeleteFile(selectedFile)} size="small"><Delete /></IconButton>
         <IconButton onClick={toggleView} size="small">{displayGrid ? <GridOnOutlined /> : <ViewListOutlined />}</IconButton>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+        <div style={{ display: 'flex', justifyContent: 'right', alignItems: 'center', }}>
         <div className="upload-options">
           <Button
             component="label"
@@ -381,6 +417,7 @@ const MyFilesPage = () => {
             Upload File
           </Button>
         </div>
+      </div>
       </div>
       <div className={displayGrid ? 'files-grid' : 'files-list'}>
         {getCurrentFiles().map((file, index) => (

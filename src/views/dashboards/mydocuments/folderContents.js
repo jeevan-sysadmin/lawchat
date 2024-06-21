@@ -37,7 +37,7 @@ function FolderContents() {
     }
 
     fetchFolderContents();
-  }, [currentDirectory]); // Add currentDirectory as a dependency
+  }, [currentDirectory]); // Include currentDirectory in the dependency array
 
   const handleFolderClick = (folder) => {
     setSelectedFolder(folder);
@@ -50,6 +50,7 @@ function FolderContents() {
   const handleFolderDoubleClick = async (folder) => {
     try {
       const response = await fetch(`/api/s3-list?userId=${userId}&folder=${folder}`);
+
       const data = await response.json();
 
       if (response.ok) {
